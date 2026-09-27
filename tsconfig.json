@@ -28,6 +28,12 @@
     },
     {
       "path": "./tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/workshop-complete/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/workshop-complete/tsconfig.spec.json"
     }
   ]
 }

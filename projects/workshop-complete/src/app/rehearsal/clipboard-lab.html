@@ -1,0 +1,71 @@
+<div class="page-shell reading-page">
+  <a routerLink="/rehearsal" class="text-link">← Presenter rehearsal</a>
+  <header class="page-heading">
+    <p class="eyebrow">Prepared teaching example · {{ mode() }}</p>
+    <h1>The task changed.<br />Did the prompt?</h1>
+    <p>
+      Select “Understand a repo,” then “Debug a bug.” Copy and compare what you paste with the
+      prompt on screen.
+    </p>
+  </header>
+  <div class="notice" [class.bug-notice]="mode() === 'flawed'">
+    <strong>{{ mode() === 'flawed' ? 'Deliberately flawed example' : 'Corrected example' }}</strong>
+    <p>
+      {{
+        mode() === 'flawed'
+          ? 'This saved example intentionally copies the first selected prompt. It demonstrates a stale-state bug; it is not the behavior of the normal Field Guide.'
+          : 'This saved example copies the currently selected prompt. Repeat the same steps and use the same acceptance criterion.'
+      }}
+    </p>
+  </div>
+  <div class="lab-controls">
+    <button
+      type="button"
+      class="button secondary"
+      (click)="setMode(mode() === 'flawed' ? 'corrected' : 'flawed')"
+    >
+      {{ mode() === 'flawed' ? 'Use corrected behavior' : 'Use flawed behavior' }}</button
+    ><button type="button" class="text-button" (click)="reset()">Reset example</button>
+  </div>
+  <section class="panel lab-panel" aria-label="Task switching experiment">
+    <label for="lab-task" class="field-title">Choose an engineering task</label>
+    <select
+      #taskSelect
+      id="lab-task"
+      [value]="selected()?.id ?? ''"
+      (change)="select(taskSelect.value)"
+    >
+      <option value="">Choose a task…</option>
+      @for (guide of guides; track guide.id) {
+        <option [value]="guide.id">{{ guide.label }}</option>
+      }
+    </select>
+    @if (selected(); as guide) {
+      <h2>{{ guide.title }}</h2>
+      <label for="visible-prompt" class="field-title">The prompt currently on screen</label
+      ><textarea id="visible-prompt" readonly rows="8" [value]="guide.prompt"></textarea>
+      <button type="button" class="button lab-copy" [disabled]="copying()" (click)="copy()">
+        {{ copying() ? 'Copying…' : 'Copy prompt' }}
+      </button>
+    } @else {
+      <p>Nothing selected yet. Start with “Understand a repo.”</p>
+    }
+    <p role="status" aria-live="polite">{{ feedback() }}</p>
+    @if (attemptedPayload()) {
+      <label for="attempted-payload" class="field-title">Payload of the last copy attempt</label
+      ><textarea id="attempted-payload" readonly rows="8" [value]="attemptedPayload()"></textarea>
+    }
+  </section>
+  <section class="panel section-space">
+    <h2>One requirement. One regression.</h2>
+    <p>Select A, select B, then assert that the clipboard receives B’s prompt.</p>
+    <p><code>npm run test:copy-bug</code> intentionally fails against the flawed example.</p>
+    <p>
+      <code>npm run test:complete -- --watch=false</code> includes the same assertion against the
+      corrected example and the production selector.
+    </p>
+    <p class="small-label">
+      These are commands to run in your terminal, not claims that a test ran in this browser.
+    </p>
+  </section>
+</div>

@@ -1,0 +1,29 @@
+<section class="prompt-card" [attr.aria-labelledby]="promptId() + '-label'">
+  <div class="prompt-heading">
+    <label [id]="promptId() + '-label'" [for]="promptId()">{{ label() }}</label>
+    <button class="copy-button" type="button" (click)="copy()" [disabled]="status() === 'copying'">
+      <span aria-hidden="true">⧉</span>
+      {{ status() === 'copying' ? 'Copying…' : status() === 'copied' ? 'Copied' : 'Copy prompt' }}
+    </button>
+  </div>
+  <textarea
+    #promptText
+    [id]="promptId()"
+    [value]="text()"
+    readonly
+    spellcheck="false"
+    rows="9"
+  ></textarea>
+  <div class="prompt-footer">
+    <span>Adapt the context to your own project.</span>
+    <button type="button" class="select-text" (click)="selectText(promptText)">Select text</button>
+  </div>
+  <p
+    class="copy-feedback"
+    role="status"
+    aria-live="polite"
+    [class.copy-error]="status() === 'error'"
+  >
+    {{ message() }}
+  </p>
+</section>

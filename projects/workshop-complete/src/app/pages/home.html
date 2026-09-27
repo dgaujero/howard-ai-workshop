@@ -1,0 +1,55 @@
+<div class="page-shell">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-copy">
+      <p class="eyebrow">
+        <span class="red-rule" aria-hidden="true"></span>AI-native engineering · A practical field
+        guide
+      </p>
+      <h1 id="hero-title">Good engineering.<br /><em>With AI in the loop.</em></h1>
+      <p class="hero-description">
+        From an unfamiliar codebase to a verified change. Five practical guides to help you give
+        better context, ask better questions, and own the result.
+      </p>
+      <div class="hero-actions">
+        <button class="button" (click)="chooseTask()">
+          Find your starting point <span aria-hidden="true">↓</span></button
+        ><a routerLink="/workflow" class="text-link"
+          >Explore the workflow <span aria-hidden="true">↗</span></a
+        >
+      </div>
+      <p class="hero-caption">Built for Howard students. Useful on your next project.</p>
+    </div>
+    <aside class="field-notes" aria-label="The engineering loop">
+      <div class="notes-header">
+        <span>FIELD NOTES / 001</span><span aria-hidden="true">↗</span>
+      </div>
+      <h2>The process<br />is the practice.</h2>
+      <ol>
+        @for (step of loop; track step.title; let i = $index) {
+          <li>
+            <span>0{{ i + 1 }}</span
+            >{{ step.title
+            }}<span class="loop-mark" aria-hidden="true">{{ i === 6 ? '↺' : '↓' }}</span>
+          </li>
+        }
+      </ol>
+      <p>Human judgment, at every step.</p>
+    </aside>
+  </section>
+  <div class="intro-strip">
+    <span><strong>05</strong> practical task guides</span
+    ><span><strong>01</strong> repeatable workflow</span
+    ><span>Free to read. No API key required.</span>
+  </div>
+  <app-task-workbench />
+  <section class="takeaway-band" aria-labelledby="takeaway-title">
+    <div>
+      <p class="eyebrow">Take it with you</p>
+      <h2 id="takeaway-title">Make one small, verified change.</h2>
+      <p>Pick a project you’re allowed to work on. Keep the scope small. Save the evidence.</p>
+    </div>
+    <a routerLink="/resources" class="text-link"
+      >Your resource kit <span aria-hidden="true">↗</span></a
+    >
+  </section>
+</div>

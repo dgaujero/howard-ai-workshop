@@ -1,0 +1,50 @@
+<a class="skip-link" href="#main-content" (click)="skipToContent($event)">Skip to content</a>
+<div class="university-strip">
+  <div class="shell-width">
+    <span
+      >HOWARD UNIVERSITY <span class="strip-divider" aria-hidden="true">/</span> GUEST LECTURE
+      RESOURCE</span
+    ><span class="strip-aside">Context. Craft. Confidence.</span>
+  </div>
+</div>
+<header class="site-header">
+  <div class="shell-width header-content">
+    <a class="brand" routerLink="/" aria-label="AI Engineering Field Guide home"
+      ><span class="brand-mark" aria-hidden="true">fg<span>.</span></span
+      ><span><strong>FIELD GUIDE</strong><small>AI-NATIVE ENGINEERING</small></span></a
+    >
+    <nav aria-label="Main navigation">
+      <a
+        routerLink="/"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        ariaCurrentWhenActive="page"
+        >Task guides</a
+      ><a routerLink="/workflow" routerLinkActive="active" ariaCurrentWhenActive="page"
+        >The workflow</a
+      ><a routerLink="/resources" routerLinkActive="active" ariaCurrentWhenActive="page"
+        >Resources</a
+      ><a routerLink="/prompts" routerLinkActive="active" ariaCurrentWhenActive="page"
+        >Demo prompts</a
+      >
+    </nav>
+    <a class="repo-link" [href]="repository" target="_blank" rel="noopener noreferrer"
+      >View source <span aria-hidden="true">↗</span
+      ><span class="sr-only"> (opens in a new tab)</span></a
+    >
+  </div>
+</header>
+<main id="main-content" tabindex="-1"><router-outlet (activate)="onActivate()" /></main>
+<footer class="site-footer">
+  <div class="shell-width footer-content">
+    <div>
+      <strong>Learn the process. Own the result.</strong>
+      <p>A guest-lecture resource by Deion Aujero<br />for Howard University students.</p>
+    </div>
+    <div>
+      <a routerLink="/resources">Keep learning ↗</a
+      ><a routerLink="/rehearsal">Presenter rehearsal</a
+      ><span>Prepared guidance · No AI backend</span>
+    </div>
+  </div>
+</footer>

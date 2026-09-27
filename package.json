@@ -3,10 +3,14 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "start": "ng serve howard-ai-workshop",
+    "build": "ng build howard-ai-workshop",
+    "watch": "ng build howard-ai-workshop --watch --configuration development",
+    "test": "ng test howard-ai-workshop",
+    "start:complete": "ng serve workshop-complete --port 4201",
+    "build:complete": "ng build workshop-complete",
+    "test:complete": "ng test workshop-complete",
+    "test:copy-bug": "ng test workshop-complete --watch=false --include \"**/stale-copy.demo.ts\""
   },
   "private": true,
   "packageManager": "npm@10.8.2",

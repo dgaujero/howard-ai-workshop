@@ -1,0 +1,70 @@
+<section id="choose-task" aria-labelledby="task-heading" class="workbench">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">The task selector</p>
+      <h2 id="task-heading" tabindex="-1">What are you working on?</h2>
+    </div>
+    <p>Choose a task. Get a process you can put to work.</p>
+  </div>
+  <div class="workbench-layout">
+    <aside>
+      <fieldset>
+        <legend class="sr-only">Choose your engineering task</legend>
+        @for (guide of guides; track guide.id; let i = $index) {
+          <label class="task-option" [class.selected]="selectedId() === guide.id">
+            <input
+              type="radio"
+              name="engineering-task"
+              [value]="guide.id"
+              [checked]="selectedId() === guide.id"
+              (change)="selectTask(guide.id)"
+            />
+            <span class="task-number" aria-hidden="true">0{{ i + 1 }}</span>
+            <span
+              ><strong>{{ guide.label }}</strong
+              ><small>{{ guide.summary }}</small></span
+            >
+            <span class="task-arrow" aria-hidden="true">↗</span>
+          </label>
+        }
+      </fieldset>
+      @if (selectedGuide()) {
+        <button type="button" class="text-button clear-selection" (click)="clearSelection()">
+          Clear selection
+        </button>
+      }
+      <p class="sidebar-note">
+        Good prompts start with context.<br />Good engineering ends with evidence.
+      </p>
+    </aside>
+    <div class="guide-container">
+      <p class="sr-only" role="status" aria-live="polite">
+        {{
+          selectedGuide()
+            ? 'Showing guide: ' + selectedGuide()!.title
+            : 'No task selected. Choose a task to begin.'
+        }}
+      </p>
+      @if (selectedGuide(); as guide) {
+        <app-guide-detail [guide]="guide" />
+      } @else {
+        <div class="empty-guide">
+          <div class="empty-mark" aria-hidden="true">↗</div>
+          <p class="eyebrow">One task. A clear next step.</p>
+          <h3>Your next move<br />starts here.</h3>
+          <p>
+            Choose a task to open your guide. You’ll get practical steps, a starter prompt, and
+            questions to help you verify the result.
+          </p>
+          <ul aria-label="What each guide includes">
+            <li>Steps</li>
+            <li>Context</li>
+            <li>Prompt</li>
+            <li>Verification</li>
+          </ul>
+          <span class="empty-footnote">Prepared guidance. No account or API key needed.</span>
+        </div>
+      }
+    </div>
+  </div>
+</section>

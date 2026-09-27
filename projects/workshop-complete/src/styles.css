@@ -1,0 +1,448 @@
+/* Shared workshop theme. Color references and design choices: docs/design-notes.md. */
+:root {
+  color-scheme: light;
+  --blue: #003a63;
+  --blue-light: #edf3f7;
+  --accent: #e51937;
+  --accent-dark: #b71932;
+  --ink: #142c3d;
+  --muted: #586975;
+  --paper: #ffffff;
+  --surface: #f7f7f3;
+  --border: #dce2e3;
+  --focus: #b65313;
+  --radius: 8px;
+  --font-heading: Georgia, 'Times New Roman', serif;
+  --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--surface);
+  -webkit-font-smoothing: antialiased;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+button,
+a,
+summary,
+input {
+  -webkit-tap-highlight-color: transparent;
+}
+a {
+  color: var(--blue);
+  text-underline-offset: 4px;
+}
+button {
+  cursor: pointer;
+}
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 4px;
+}
+#main-content:focus:not(:focus-visible),
+#task-heading:focus:not(:focus-visible) {
+  outline: none;
+}
+::selection {
+  background: #cde2f0;
+  color: var(--ink);
+}
+h1,
+h2,
+h3,
+p,
+li,
+code,
+a,
+label {
+  overflow-wrap: anywhere;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.skip-link {
+  position: fixed;
+  left: 16px;
+  top: 12px;
+  transform: translateY(-200%);
+  clip-path: inset(50%);
+  z-index: 100;
+  background: var(--ink);
+  color: #fff;
+  padding: 12px 18px;
+}
+.skip-link:focus {
+  transform: none;
+  clip-path: none;
+}
+.page-shell {
+  width: min(1180px, calc(100% - 64px));
+  margin-inline: auto;
+}
+.reading-page {
+  padding-block: 48px 64px;
+}
+.eyebrow {
+  margin: 0;
+  font: 10px/1.6 var(--font-mono);
+  font-weight: 600;
+  color: var(--accent-dark);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.page-heading {
+  padding-bottom: 36px;
+  max-width: 850px;
+}
+.page-heading h1 {
+  margin: 18px 0;
+  font: clamp(36px, 4.5vw, 56px)/1.12 var(--font-heading);
+  letter-spacing: -1.6px;
+}
+.page-heading > p:not(.eyebrow) {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.9;
+  max-width: 730px;
+}
+.section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 26px;
+}
+.section-heading h2 {
+  font: 32px/1.2 var(--font-heading);
+  letter-spacing: -0.6px;
+  margin: 10px 0 0;
+}
+.section-heading > p {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 4px;
+}
+.section-space {
+  margin-top: 44px;
+}
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 14px 18px;
+  border: 1px solid var(--blue);
+  border-radius: 4px;
+  color: #fff;
+  background: var(--blue);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.button:hover {
+  background: var(--ink);
+}
+.button.secondary {
+  background: var(--paper);
+  color: var(--blue);
+}
+.button:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+.text-link {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.text-link:hover {
+  text-decoration: underline;
+}
+.text-button {
+  padding: 0;
+  background: transparent;
+  color: var(--blue);
+  border: 0;
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.panel {
+  padding: 30px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--paper);
+  min-width: 0;
+}
+.panel h2,
+.panel h3 {
+  margin: 0 0 16px;
+  font: 25px/1.3 var(--font-heading);
+}
+.panel .eyebrow {
+  margin-bottom: 14px;
+}
+.panel p {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.9;
+}
+.two-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+  align-items: start;
+}
+.stack {
+  display: grid;
+  gap: 24px;
+}
+.plain-list {
+  padding-left: 20px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.9;
+}
+.plain-list li {
+  margin-bottom: 12px;
+}
+.check-list {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.check-list li {
+  display: flex;
+  align-items: start;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+.check-list li > span {
+  color: var(--blue);
+  font-weight: bold;
+}
+.workflow-steps {
+  display: grid;
+  gap: 26px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.workflow-steps li {
+  display: flex;
+  align-items: start;
+  gap: 22px;
+}
+.workflow-steps .number {
+  margin-top: 6px;
+  font: 12px var(--font-mono);
+  color: var(--accent-dark);
+}
+.workflow-steps h2 {
+  margin-bottom: 5px;
+}
+.workflow-steps p {
+  margin: 0;
+}
+.notice {
+  background: var(--blue-light);
+  border-left: 3px solid var(--blue);
+  padding: 24px;
+}
+.notice h2 {
+  font: 23px/1.3 var(--font-heading);
+  margin: 0 0 12px;
+}
+.notice p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--muted);
+  margin-bottom: 0;
+}
+.bug-notice {
+  background: #fff3e3;
+  border-left-color: #b75a12;
+}
+.takeaway {
+  margin-top: 42px;
+  padding-top: 30px;
+  border-top: 1px solid var(--border);
+}
+.takeaway h2 {
+  font: 28px var(--font-heading);
+}
+.takeaway p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
+.resource-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+.resource-card {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding: 25px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-decoration: none;
+  color: var(--ink);
+  min-width: 0;
+}
+a.resource-card:hover {
+  border-color: var(--blue);
+}
+.resource-card h2,
+.resource-card h3 {
+  font: 23px/1.3 var(--font-heading);
+  margin: 12px 0;
+}
+.resource-card p {
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--muted);
+}
+.resource-access {
+  display: block;
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.7;
+  width: 100%;
+}
+.pending {
+  background: #f1f2ed;
+}
+.pill {
+  font: 10px var(--font-mono);
+  border: 1px solid #c0c9cb;
+  padding: 7px 10px;
+  border-radius: 4px;
+}
+.small-label,
+.source-note {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.8;
+}
+.source-note {
+  margin-top: 32px;
+}
+.supporting-copy {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+.prompt-library {
+  display: grid;
+  gap: 44px;
+  max-width: 900px;
+}
+code {
+  font: 12px/1.8 var(--font-mono);
+  background: var(--blue-light);
+  padding: 2px 5px;
+}
+.lab-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 24px;
+  margin-block: 24px;
+}
+.lab-panel {
+  max-width: 900px;
+}
+.field-title {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-block: 18px 10px;
+}
+.lab-panel select,
+.lab-panel textarea {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #80919c;
+  border-radius: 4px;
+  background: #fff;
+  color: var(--ink);
+}
+.lab-panel textarea {
+  font: 13px/1.8 var(--font-mono);
+  resize: vertical;
+}
+.lab-panel h2 {
+  margin-top: 30px;
+}
+.lab-copy {
+  margin-top: 18px;
+}
+@media (max-width: 850px) {
+  .resource-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .two-columns {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 600px) {
+  .page-shell {
+    width: calc(100% - 36px);
+  }
+  .reading-page {
+    padding-block: 32px 44px;
+  }
+  .section-heading h2 {
+    font-size: 28px;
+  }
+  .resource-grid {
+    grid-template-columns: 1fr;
+  }
+  .panel {
+    padding: 22px;
+  }
+  .page-heading h1 {
+    letter-spacing: -1px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+}

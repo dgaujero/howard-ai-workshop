@@ -11,12 +11,10 @@ import { REPOSITORY_URL } from './data/resources';
 export class App {
   readonly repository = REPOSITORY_URL;
   private hasActivated = false;
-
   skipToContent(event: Event): void {
     event.preventDefault();
     document.getElementById('main-content')?.focus();
   }
-
   onActivate(): void {
     if (!this.hasActivated) {
       this.hasActivated = true;

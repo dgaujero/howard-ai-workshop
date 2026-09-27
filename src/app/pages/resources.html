@@ -1,0 +1,92 @@
+<header class="page-intro">
+  <h1>Resources</h1>
+  <p>Workshop materials, setup steps, and official references. Start with what you need today.</p>
+</header>
+<section class="content-section" aria-labelledby="materials-heading">
+  <h2 id="materials-heading">From this workshop</h2>
+  <ul>
+    <li>
+      <a [href]="repository">Workshop repository</a> — inspect the source, read the tests, and run
+      the apps locally.
+    </li>
+    <li><a routerLink="/prompts">Demo prompts</a> — six prompts to adapt to your project.</li>
+    <li>
+      <a [href]="liveWorkshop">Classroom site</a> — the public URL used during the live session.
+    </li>
+  </ul>
+  <h3>Lecture slides</h3>
+  @if (slides) {
+    <a [href]="slides">Open the slide deck</a>
+  } @else {
+    <p>
+      <strong>Coming soon.</strong> The presenter’s slide deck will be linked here when it is
+      available.
+    </p>
+  }
+</section>
+<section class="content-section" aria-labelledby="setup-heading">
+  <h2 id="setup-heading">Set up Codex in VS Code</h2>
+  <ol>
+    <li>Open your project folder in VS Code.</li>
+    <li>Use the official Codex IDE guide to install the extension and sign in.</li>
+    <li>Review the permissions and scope before allowing edits or commands.</li>
+    <li>Begin with the “Understand a repo” prompt, then open the files it cites.</li>
+  </ol>
+  <a href="https://learn.chatgpt.com/docs/codex/ide">Official IDE setup</a>
+  <h3>Without agent access</h3>
+  <p>
+    Read the guides here for free. If your course permits it, use a chat tool you already have
+    access to, provide relevant non-private context, and run the checks yourself.
+  </p>
+  <p>
+    Access to a coding agent is not required to practice reading code, planning a change, reviewing
+    a diff, or testing a result.
+  </p>
+  <a routerLink="/workflow">Follow the engineering loop</a>
+</section>
+<section class="content-section" aria-labelledby="deployment-heading">
+  <h2 id="deployment-heading">GitHub + Vercel setup</h2>
+  <ol>
+    <li>
+      Review the code, run the tests and production build, then commit the intended changes to
+      GitHub.
+    </li>
+    <li>
+      Import the repository into a Vercel project. Confirm the project root and production branch.
+    </li>
+    <li>
+      For this starter, build from the repository root with <code>npm run build</code> and publish
+      <code>dist/howard-ai-workshop/browser</code>.
+    </li>
+    <li>
+      Match the deployment’s commit to the one you pushed. Open its URL and check navigation, guide
+      content, and any features added during class.
+    </li>
+    <li>
+      Check the exact shared URL while signed out. Localhost is only available on your machine.
+    </li>
+  </ol>
+  <a href="https://vercel.com/docs/git/vercel-for-github">Official GitHub deployment guide</a>
+</section>
+@for (category of categories; track category) {
+  <section class="content-section" [attr.aria-label]="category">
+    <h2>{{ category }}</h2>
+    <ul class="resource-list">
+      @for (resource of resources; track resource.href) {
+        @if (resource.category === category) {
+          <li>
+            <h3>
+              <a [href]="resource.href">{{ resource.title }}</a>
+            </h3>
+            <p>{{ resource.description }}</p>
+            <p class="help-text">{{ resource.access }}</p>
+          </li>
+        }
+      }
+    </ul>
+  </section>
+}
+<p class="help-text">
+  References checked {{ checked }}. Account access, limits, and prices may change; follow the
+  official reference for current details.
+</p>

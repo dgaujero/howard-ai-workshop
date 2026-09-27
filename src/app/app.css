@@ -1,0 +1,44 @@
+:host {
+  display: block;
+}
+.site-header {
+  border-bottom: 1px solid #ccc;
+  padding-block: 24px;
+}
+.attribution {
+  margin: 0 0 8px;
+  color: #555;
+  font-size: 14px;
+}
+.site-title {
+  color: inherit;
+  font-size: 20px;
+  font-weight: 700;
+  text-decoration: none;
+}
+nav {
+  display: flex;
+  gap: 12px 24px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+nav a {
+  padding-block: 4px;
+}
+nav a.active {
+  color: #222;
+  font-weight: 700;
+  text-decoration-thickness: 2px;
+}
+main {
+  padding-block: 36px 48px;
+  min-height: 55vh;
+}
+.site-footer {
+  border-top: 1px solid #ccc;
+  padding-block: 24px;
+  font-size: 14px;
+}
+.site-footer p {
+  margin-top: 0;
+}

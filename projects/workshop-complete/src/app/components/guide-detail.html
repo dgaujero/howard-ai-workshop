@@ -1,0 +1,45 @@
+<article [attr.aria-labelledby]="idPrefix() + '-title'">
+  <header class="guide-heading">
+    <p class="eyebrow">Your field guide</p>
+    <h3 [id]="idPrefix() + '-title'">{{ guide().title }}</h3>
+    <p>{{ guide().outcome }}</p>
+  </header>
+  <section class="guide-section" aria-label="Recommended steps">
+    <h4><span class="section-index">01</span> Work through the steps</h4>
+    <ol class="steps">
+      @for (step of guide().steps; track step.title; let i = $index) {
+        <li>
+          <span class="step-number" aria-hidden="true">{{ i + 1 }}</span>
+          <div>
+            <h5>{{ step.title }}</h5>
+            <p>{{ step.description }}</p>
+          </div>
+        </li>
+      }
+    </ol>
+  </section>
+  <section class="context-box" aria-label="Required context">
+    <h4><span class="section-index">02</span> Bring the right context</h4>
+    <ul>
+      @for (item of guide().context; track item) {
+        <li>{{ item }}</li>
+      }
+    </ul>
+  </section>
+  <section class="guide-section" aria-label="Starter prompt">
+    <h4><span class="section-index">03</span> Start the conversation</h4>
+    <app-prompt-card
+      [promptId]="idPrefix() + '-prompt'"
+      [label]="guide().title + ' — starter prompt'"
+      [text]="guide().prompt"
+    />
+  </section>
+  <section class="guide-section verify-section" aria-label="Verification questions">
+    <h4><span class="section-index">04</span> Before you call it done</h4>
+    <ul class="check-list">
+      @for (check of guide().checks; track check) {
+        <li><span aria-hidden="true">✓</span>{{ check }}</li>
+      }
+    </ul>
+  </section>
+</article>
