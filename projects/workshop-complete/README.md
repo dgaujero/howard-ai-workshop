@@ -49,7 +49,7 @@ Open `http://localhost:4201/`. The Field Guide starter uses `npm start` on port 
 
 Paths in this table are relative to `projects/workshop-complete/`. The student-facing workbench never uses the deliberately flawed example.
 
-## Rehearsal and deployment
+## Rehearsal and optional deployment
 
 See [the rehearsal runbook](docs/rehearsal.md), [HUB-01 acceptance criteria](docs/HUB-01.md), and [design and source notes](docs/design-notes.md).
 
@@ -57,7 +57,7 @@ The [verification record](docs/verification.md) lists the passing checks, intent
 
 The app uses hash-based routes (for example, `/#/resources`). These work when refreshed on a static host without adding rewrite configuration to the original app.
 
-To publish the **backup separately**, create a separate Vercel project connected to this repository:
+The lecture plan keeps this backup local on port 4201. If you later choose to publish it separately, create a separate Vercel project connected to this repository:
 
 - Root directory: repository root, not `projects/workshop-complete`.
 - Install command: `npm ci`.
@@ -65,6 +65,6 @@ To publish the **backup separately**, create a separate Vercel project connected
 - Output directory: `dist/workshop-complete/browser`.
 - Configure the intended production branch and check the exact deployment’s commit.
 
-Do not replace the classroom project’s build settings just to host the backup. Creating this code does not publish it. Check the backup URL while signed out before sharing it.
+Do not replace the classroom project’s build settings to host the backup. Creating this code does not publish it. Check any future backup URL while signed out before sharing it.
 
 The classroom site is `https://howard-ai-workshop.vercel.app/`. The slide-deck link is intentionally unset and displayed as “Coming soon”; set `SLIDES_URL` in `resources.ts` when the real public link is available.

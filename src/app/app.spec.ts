@@ -25,8 +25,9 @@ describe('Field Guide starter', () => {
 
   it('introduces the Field Guide and makes all five guides available in a fixed order', () => {
     expect(page.querySelector('h1')?.textContent).toBe('AI Engineering Field Guide');
-    expect(page.textContent).toContain('Howard University students');
-    expect(page.textContent).toContain('Deion Aujero');
+    const footer = page.querySelector('.site-footer');
+    expect(footer?.textContent).toContain('Prepared by Deion Aujero');
+    expect(footer?.textContent).toContain('Howard University guest lecture');
     const guides = Array.from(page.querySelectorAll('details'));
     expect(guides.map((guide) => guide.id)).toEqual([
       'guide-understand',
