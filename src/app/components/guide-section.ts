@@ -32,6 +32,7 @@ import { PromptText } from './prompt-text';
           [promptId]="guide().id + '-prompt'"
           [label]="guide().title + ' — starter prompt'"
           [text]="guide().prompt"
+          [copyEnabled]="true"
         />
         <h3>Verification questions</h3>
         <ul class="guide-checks">

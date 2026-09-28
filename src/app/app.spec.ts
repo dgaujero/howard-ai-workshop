@@ -5,11 +5,35 @@ import { routes } from './app.routes';
 import { TASK_GUIDES } from './data/guides';
 import { DEMO_PROMPTS } from './data/demo-prompts';
 import { RESOURCES, LIVE_WORKSHOP_URL, REPOSITORY_URL } from './data/resources';
+import { vi } from 'vitest';
 
 describe('Field Guide starter', () => {
   let fixture: ComponentFixture<App>;
   let page: HTMLElement;
   let router: Router;
+  const clipboardDescriptor = Object.getOwnPropertyDescriptor(navigator, 'clipboard');
+
+  afterEach(() => {
+    if (clipboardDescriptor) {
+      Object.defineProperty(navigator, 'clipboard', clipboardDescriptor);
+    } else {
+      Reflect.deleteProperty(navigator, 'clipboard');
+    }
+  });
+
+  async function selectTask(id: string): Promise<void> {
+    const select = page.querySelector<HTMLSelectElement>('#engineering-task')!;
+    select.value = id;
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+    await fixture.whenStable();
+  }
+
+  function mockClipboard(writeText: ReturnType<typeof vi.fn> | undefined): void {
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: writeText ? { writeText } : undefined,
+    });
+  }
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -28,20 +52,35 @@ describe('Field Guide starter', () => {
     const footer = page.querySelector('.site-footer');
     expect(footer?.textContent).toContain('Prepared by Deion Aujero');
     expect(footer?.textContent).toContain('Howard University guest lecture');
-    const guides = Array.from(page.querySelectorAll('details'));
-    expect(guides.map((guide) => guide.id)).toEqual([
-      'guide-understand',
-      'guide-build',
-      'guide-debug',
-      'guide-review',
-      'guide-deploy',
+    const choices = Array.from(page.querySelectorAll<HTMLOptionElement>('select option'));
+    expect(choices.map((choice) => choice.value)).toEqual([
+      '',
+      'understand',
+      'build',
+      'debug',
+      'review',
+      'deploy',
     ]);
-    expect(guides.map((guide) => guide.open)).toEqual([true, false, false, false, false]);
+    expect(choices.slice(1).map((choice) => choice.textContent?.trim())).toEqual(
+      TASK_GUIDES.map((guide) => guide.title),
+    );
+    expect(page.querySelector<HTMLSelectElement>('select')!.value).toBe('');
+    expect(page.querySelector('label[for="engineering-task"]')?.textContent).toContain(
+      'Choose your next step',
+    );
+    expect(page.querySelector('#task-instruction')?.textContent).toContain(
+      'Choose your engineering task',
+    );
+    expect(page.querySelector('details')).toBeNull();
+    expect(page.querySelector('.copy-prompt')).toBeNull();
   });
 
-  it('renders every guide’s complete prepared content and exact selectable prompt', () => {
+  it('switches every guide’s complete prepared content and exact selectable prompt together', async () => {
     for (const guide of TASK_GUIDES) {
+      await selectTask(guide.id);
+      expect(page.querySelectorAll('details')).toHaveLength(1);
       const section = page.querySelector('#guide-' + guide.id)!;
+      expect((section as HTMLDetailsElement).open).toBe(true);
       expect(section.querySelector('summary')?.textContent).toContain(guide.title);
       expect(section.textContent).toContain(guide.summary);
       expect(section.textContent).toContain(guide.outcome);
@@ -68,7 +107,108 @@ describe('Field Guide starter', () => {
       expect(prompt.disabled).toBe(false);
       expect(section.querySelector('label')?.htmlFor).toBe(prompt.id);
     }
+    await selectTask('');
+    expect(page.querySelector('details')).toBeNull();
+    expect(page.querySelector('.copy-prompt')).toBeNull();
   });
+
+  it('copies the current prompt after switching A → B and clears previous success', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    mockClipboard(writeText);
+    await selectTask('understand');
+    page.querySelector<HTMLButtonElement>('.copy-prompt')!.click();
+    await fixture.whenStable();
+    expect(writeText).toHaveBeenNthCalledWith(1, TASK_GUIDES[0].prompt);
+    expect(page.querySelector('[role="status"]')?.textContent).toBe('Prompt copied.');
+    await selectTask('build');
+    expect(page.querySelector('[role="status"]')?.textContent).toBe('');
+    page.querySelector<HTMLButtonElement>('.copy-prompt')!.click();
+    await fixture.whenStable();
+    expect(writeText).toHaveBeenNthCalledWith(2, TASK_GUIDES[1].prompt);
+    expect(writeText).toHaveBeenCalledTimes(2);
+    expect(page.querySelector('[role="status"]')?.textContent).toBe('Prompt copied.');
+  });
+
+  it('reports success only after clipboard completion and prevents duplicate pending copies', async () => {
+    let finish!: () => void;
+    const writeText = vi.fn(
+      () =>
+        new Promise<void>((resolve) => {
+          finish = resolve;
+        }),
+    );
+    mockClipboard(writeText);
+    await selectTask('debug');
+    const button = page.querySelector<HTMLButtonElement>('.copy-prompt')!;
+    button.click();
+    await fixture.whenStable();
+    expect(button.disabled).toBe(true);
+    expect(button.textContent).toContain('Copying');
+    expect(page.querySelector('[role="status"]')?.textContent).toBe('');
+    button.click();
+    expect(writeText).toHaveBeenCalledTimes(1);
+    finish();
+    await writeText.mock.results[0].value;
+    await fixture.whenStable();
+    expect(button.disabled).toBe(false);
+    expect(page.querySelector('[role="status"]')?.textContent).toBe('Prompt copied.');
+  });
+
+  it.each(['resolve', 'reject'])(
+    'ignores an old task’s pending copy %s after switching',
+    async (outcome) => {
+      let finish!: () => void;
+      const writeText = vi.fn(
+        () =>
+          new Promise<void>((resolve, reject) => {
+            finish = outcome === 'resolve' ? resolve : () => reject(new Error('Denied'));
+          }),
+      );
+      mockClipboard(writeText);
+      await selectTask('understand');
+      page.querySelector<HTMLButtonElement>('.copy-prompt')!.click();
+      await selectTask('build');
+      finish();
+      await writeText.mock.results[0].value.catch(() => undefined);
+      await fixture.whenStable();
+      expect(writeText).toHaveBeenCalledWith(TASK_GUIDES[0].prompt);
+      expect(page.querySelector<HTMLTextAreaElement>('textarea')!.value).toBe(
+        TASK_GUIDES[1].prompt,
+      );
+      expect(page.querySelector('[role="status"]')?.textContent).toBe('');
+      expect(page.querySelector<HTMLButtonElement>('.copy-prompt')!.disabled).toBe(false);
+    },
+  );
+
+  it.each(['rejected', 'unavailable'])(
+    'offers accurate selectable-text fallback when clipboard is %s',
+    async (failure) => {
+      const writeText = vi.fn().mockRejectedValue(new Error('Denied'));
+      mockClipboard(failure === 'rejected' ? writeText : undefined);
+      await selectTask('understand');
+      await selectTask('review');
+      page.querySelector<HTMLButtonElement>('.copy-prompt')!.click();
+      await fixture.whenStable();
+      const message = page.querySelector('[role="status"]')!.textContent;
+      expect(message).toBe(
+        'Couldn’t copy automatically. Select the prompt text above and use your device’s copy command.',
+      );
+      expect(message).not.toContain('Prompt copied.');
+      const prompt = page.querySelector<HTMLTextAreaElement>('textarea')!;
+      expect(prompt.value).toBe(TASK_GUIDES[3].prompt);
+      expect(prompt.readOnly).toBe(true);
+      expect(prompt.disabled).toBe(false);
+      prompt.focus();
+      prompt.select();
+      expect(document.activeElement).toBe(prompt);
+      expect(prompt.selectionStart).toBe(0);
+      expect(prompt.selectionEnd).toBe(prompt.value.length);
+      expect(page.querySelector<HTMLButtonElement>('.copy-prompt')!.disabled).toBe(false);
+      if (failure === 'rejected') expect(writeText).toHaveBeenCalledWith(TASK_GUIDES[3].prompt);
+      await selectTask('deploy');
+      expect(page.querySelector('[role="status"]')?.textContent).toBe('');
+    },
+  );
 
   it.each([
     ['Task guides', '/', 'AI Engineering Field Guide'],
@@ -112,6 +252,7 @@ describe('Field Guide starter', () => {
     await fixture.whenStable();
     const prompts = Array.from(page.querySelectorAll('textarea'));
     expect(prompts).toHaveLength(6);
+    expect(page.querySelector('.copy-prompt')).toBeNull();
     expect(prompts.map((prompt) => prompt.value)).toEqual(
       DEMO_PROMPTS.map((prompt) => prompt.text),
     );
@@ -128,6 +269,7 @@ describe('Field Guide starter', () => {
     page.querySelector<HTMLAnchorElement>('main a')!.click();
     await fixture.whenStable();
     expect(router.url).toBe('/');
-    expect(page.querySelectorAll('details')).toHaveLength(5);
+    expect(page.querySelectorAll('select option')).toHaveLength(6);
+    expect(page.querySelector<HTMLSelectElement>('select')!.value).toBe('');
   });
 });
